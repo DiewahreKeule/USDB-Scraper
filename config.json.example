@@ -1,0 +1,11 @@
+{
+    "WEB_SERVER": {
+        "IP": "127.0.0.1",
+        "PORT": 8080,
+        "SCRAPER_TIMEOUT": 30
+    },
+    "USDBScraper": {
+        "USERNAME": "your_username",
+        "PASSWORD": "your_password"
+    }
+}
