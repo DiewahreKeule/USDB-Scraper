@@ -116,27 +116,3 @@ class USDBScraperDB:
         Schließt die Datenbankverbindung.
         """
         self.connection.close()
-
-# Beispielverwendung
-# if __name__ == "__main__":
-#     db = QueryListDB("usdb_scrapper.db")
-
-    # Song einfügen
-    # db.insert_song(
-    #     song_name="Shape of You",
-    #     song_interpret="Ed Sheeran",
-    #     song_genre="Pop",
-    #     song_ultra_star_lyrics=b"Some lyrics...",
-    #     song_yt_video_link="https://www.youtube.com/watch?v=JGwWNGJdvx8",
-    #     song_mp3_filename="shape_of_you.mp3",
-    #     song_mp4_filename="shape_of_you.mp4",
-    #     status=1
-    # )
-
-    # Alle Songs abrufen
-    # songs = db.fetch_all_songs()
-    # for song in songs:
-    #     print(song)
-
-    # # Verbindung schließen
-    # db.close()
