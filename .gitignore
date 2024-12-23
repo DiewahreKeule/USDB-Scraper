@@ -5,3 +5,4 @@ config.json
 chromedriver-win64
 output
 *.side
+*.db
