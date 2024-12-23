@@ -1,4 +1,6 @@
 config.json
 .old
 .vscode
+.venv
 chromedriver-win64
+output
