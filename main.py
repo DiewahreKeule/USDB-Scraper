@@ -135,6 +135,10 @@ def page_downloads():
 
     return render_template('downloads.html', downloaded_songs=downloaded_songs)
 
+@app.route('/ultrastar-tools', methods=['GET'])
+def page_ultrastar_tools():
+    return render_template('ultrastar_tools.html')
+
 # FUNCTIONS
 @app.route('/search', methods=['GET'])
 def search():
