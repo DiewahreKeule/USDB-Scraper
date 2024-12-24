@@ -50,12 +50,15 @@ async def background_task():
             if song.get("STATUS") == 2:
                 print("Download Youtube Video / Download mp3 / Create Folder")
 
+                # Application Config
+                application_config = config["APPLICATION"] 
+
                 # Update Song Status -> 3 (Downloading / Create Folder)
                 databaseObj.update_song_status(usdb_song_id, 3)
 
                 # 1. Ordner erstellen                
                 song_folder_name = song.get("SONG_INTERPRET") + "-" + song.get("SONG_TITLE")  
-                output_path  = usdbUtilityObj.create_song_folder(song_folder_name)
+                output_path  = usdbUtilityObj.create_song_folder(song_folder_name, application_config.get("OUTPUT_DIRECTORY", "output"))
                 media_file_path = output_path + "/" + song_folder_name
 
                 # 2. Lyrics in eine Textdatei speichern (Dateiname: SONG_INTERPRET - SONG_TITLE.txt)    

@@ -23,9 +23,9 @@ class USDBUtility:
             print(f"Fehler beim Laden der JSON-Datei: {e}")
             return None
 
-    def create_song_folder(self, song_folder_name):
+    def create_song_folder(self, song_folder_name, output_folder):
         # Build full output Folder Name with Song Folder Name joined
-        output_path = os.path.join("output", song_folder_name)   
+        output_path = os.path.join(output_folder, song_folder_name)   
 
         # create Folder, if not exists
         os.makedirs(output_path, exist_ok=True)
