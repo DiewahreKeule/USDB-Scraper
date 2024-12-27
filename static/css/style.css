@@ -1,0 +1,37 @@
+.title-text {
+    text-align: center;    
+}
+
+/* Zentriere den Spinner */
+#loadingSpinner {
+    display: none; /* Initial versteckt */
+    position: fixed;
+    top: 50%;
+    left: 50%;    
+    transform: translate(-50%, -50%);        
+    z-index: 1000; /* Überdeckt alles andere */            
+}
+
+.spinner-border {
+    width: 16rem;
+    height: 16rem;
+    border-width: 0.5rem; /* Dickere Linien für große Spinner */
+    color: #6f42c1 !important;
+}
+
+.hidden {
+    display: none !important; /* Verhindert, dass der Spinner initial sichtbar ist */
+}
+
+.action-btn-bar {
+    margin-top: 10px;
+    float: right;
+}
+
+.btn-refresh {
+    float: right;
+}
+
+.btn-center {
+    text-align: center;
+}

@@ -49,7 +49,7 @@ class USDBScraper:
             print(f"Ein Fehler ist aufgetreten: {e}")
 
 
-    def search_song(self, song_title):
+    def search_song(self, song_title, filter_by):
         """Sucht nach einem Song."""
 
         # Songs durchsuchen öffnen
@@ -59,10 +59,22 @@ class USDBScraper:
         time.sleep(1)
 
         # Song suchen
-        ## Suche Titel 
-        search_title = self.driver.find_element(By.NAME, "title")
-        search_title.send_keys(song_title)
-        search_title.send_keys(Keys.RETURN)  # Enter drücken
+        if filter_by == 'TITLE':
+            ## Suche Titel 
+            search_title = self.driver.find_element(By.NAME, "title")
+            search_title.send_keys(song_title)
+            search_title.send_keys(Keys.RETURN)  # Enter drücken
+
+        # Interpret suchen
+        if filter_by == 'INTERPRET':
+            search_interpret = self.driver.find_element(By.NAME, "interpret")
+            search_interpret.send_keys(song_title)
+            search_interpret.send_keys(Keys.RETURN)  # Enter drücken
+
+
+        # Limit 
+        limit_element = self.driver.find_element(By.NAME, "limit")
+        limit_element.send_keys(50)
 
         time.sleep(5)
 

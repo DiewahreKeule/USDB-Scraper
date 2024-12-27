@@ -6,6 +6,9 @@ import os
 import json
 import asyncio
 import threading
+import requests
+import re
+import feedparser
 
 # Load Config-File
 usdbUtilityObj = USDBUtility()
@@ -101,11 +104,15 @@ download_list = []
 def page_home():
     """Gibt die Songliste als JSON zurück."""
 
-    # SONGS = usdbScraperObject.search_song("Willst du")
+    feed_url_top_10 = "https://usdb.animux.de/rss/rss_new_top10.php"
+    feed_data = feedparser.parse(feed_url_top_10)
+    entries_top_10 = feed_data.entries
+    
+    feed_url_download_charts = "https://usdb.animux.de/rss/rss_downloads_top10.php"
+    feed_data_download_charts = feedparser.parse(feed_url_download_charts)
+    entries_download_charts = feed_data_download_charts.entries 
 
-    # return jsonify(SONGS)
-    # return render_template('songs.html', songs=SONGS)
-    return render_template('home.html')
+    return render_template('home.html', entries_top_10=entries_top_10, entries_download_charts=entries_download_charts)
 
 @app.route('/search-song', methods=['GET'])
 def page_search_song():
@@ -144,13 +151,14 @@ def page_ultrastar_tools():
 def search():
     """Führt die Suche durch und gibt die Ergebnisse als JSON zurück."""
     query = request.args.get('query', '').lower()
-    filter_by = request.args.get('filter', 'SONG_TITEL')        
+    filter_by = request.args.get('filter', 'TITLE')        
+    print(filter_by)
 
     # USDB Config
     usdb_config = config["USDBScraper"]    
     
     usdbScraperObject = USDBScraper("./chromedriver-win64/chromedriver.exe", usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", "")) 
-    SONGS = usdbScraperObject.search_song(query)
+    SONGS = usdbScraperObject.search_song(query, filter_by)
 
     return jsonify(SONGS)
 
