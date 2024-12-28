@@ -4,5 +4,7 @@ config.json
 .venv
 chromedriver-win64
 output/*
+songs/*
 *.side
 *.db
+*.log
