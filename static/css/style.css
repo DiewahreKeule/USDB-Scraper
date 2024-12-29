@@ -32,6 +32,10 @@
     float: right;
 }
 
+.btn-right {
+    float: right;
+}
+
 .btn-center {
     text-align: center;
 }
