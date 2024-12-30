@@ -14,9 +14,15 @@
                             <div class="flex-grow-1">
                                 <div class="fw-bold text-wrap">{{ entry.title }}</div>
                                 <div class="text-wrap">{{ entry.interpret}}</div>
+                                {% if entry.STATUS == 4 %}
+                                    <span class="badge bg-success">Downloaded</span>
+                                {% elif entry.STATUS == -2 %}
+                                <span class="badge bg-warning">In Query List</span>
+                                {% endif %}                                                                
                                 <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                
                             </div>                            
-                            <button type="button" class="btn btn-primary btn-right" onclick="addToQuery('{{ entry.link }}')">
+                            <button type="button" class="btn btn-primary btn-right" 
+                            onclick="addToQuery('{{ entry.link }}', '{{ entry.title }}', '{{ entry.interpret }}')">
                                 <i class="fa-solid fa-download"></i>
                             </button>
                         </li>
@@ -35,6 +41,11 @@
                             <div class="flex-grow-1">                                
                                 <div class="fw-bold text-wrap">{{ entry.title }}</div>
                                 <div class="text-wrap">{{ entry.interpret}}</div>
+                                {% if entry.STATUS == 4 %}
+                                    <span class="badge bg-success">Downloaded</span>
+                                {% elif entry.STATUS == -2 %}
+                                <span class="badge bg-warning">In Query List</span>
+                                {% endif %}    
                                 <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                                        
                             </div> 
                             <button type="button" class="btn btn-primary btn-right"                                 

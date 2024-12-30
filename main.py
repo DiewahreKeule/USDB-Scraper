@@ -124,6 +124,7 @@ download_list = []
 # PAGES
 @app.route('/', methods=['GET'])
 def page_home():    
+    usdbDatabaseObj = USDBScraperDB("usdb_scrapper.db")
     flask_logger.debug("GET: Home Page...")
 
     feed_url_top_10 = "https://usdb.animux.de/rss/rss_new_top10.php"
@@ -135,13 +136,20 @@ def page_home():
     entries_download_charts = feed_data_download_charts.entries 
 
     # Prepare Song Data - extract Interpret and Title
-    for song in entries_top_10:
+    for song in entries_top_10:        
         if 'title' in song:
             parts = song['title'].split(' - ', 1)  # Trenne bei ' - ', max. 1 Mal
             if len(parts) == 2:
                 interpret, title = parts
                 song['interpret'] = interpret.strip()  # Interpret hinzufügen
                 song['title'] = title.strip()         # Titel hinzufügen
+        if 'link' in song:
+            id = song['link'].split("id=")[-1]
+
+            # Check if Song is already Downloaded
+            result = usdbDatabaseObj.get_song_by_id(id)
+            if result:           
+                song['STATUS'] = result['STATUS']
 
     # Prepare Song Data - extract Interpret and Title
     for song in entries_download_charts:
@@ -151,6 +159,13 @@ def page_home():
                 interpret, title = parts
                 song['interpret'] = interpret.strip()  # Interpret hinzufügen
                 song['title'] = title.strip()         # Titel hinzufügen
+        if 'link' in song:
+            id = song['link'].split("id=")[-1]
+
+            # Check if Song is already Downloaded
+            result = usdbDatabaseObj.get_song_by_id(id)
+            if result:           
+                song['STATUS'] = result['STATUS']
 
     return render_template('home.html', entries_top_10=entries_top_10, entries_download_charts=entries_download_charts)
 
