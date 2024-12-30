@@ -2,55 +2,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
+<div class="container mt-4">
+    <div class="row gy-4">
         <!-- Spalte 1 -->
         <div class="col-12 col-md-6">
-            <div class="p-3 border bg-light">
-            <h5 class="title-text">USDB: Neue Songs (Top 10)</h5>
-            <ul class="list-group list-group-numbered">
-                {% for entry in entries_top_10 %}
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">{{ entry.title }}</div>
-                            <a href="{{ entry.link }}" target="_blank">USDB-Link</a>                                
-                        </div>                
-                        <button type="button" class="btn btn-primary btn-download" onclick="addToQuery('{{ entry.link }}')">
-                            <i class="fa-solid fa-download"></i>
-                        </button>                
-                    </li>
-                {% endfor %}
-            </ul>
+            <div class="p-3 border bg-light rounded shadow-sm">
+                <h5 class="title-text">USDB: Neue Songs (Top 10)</h5>
+                <ul class="list-group list-group-flush">
+                    {% for entry in entries_top_10 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="flex-grow-1">
+                                <div class="fw-bold text-wrap">{{ entry.title }}</div>
+                                <div class="text-wrap">{{ entry.interpret}}</div>
+                                {% if entry.STATUS == 4 %}
+                                    <span class="badge bg-success">Downloaded</span>
+                                {% elif entry.STATUS == -2 %}
+                                <span class="badge bg-warning">In Query List</span>
+                                {% endif %}                                                                
+                                <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">Link</a> -->
+                            </div>                            
+                            <button type="button" class="btn btn-primary btn-right" 
+                            onclick="addToQuery('{{ entry.link }}', '{{ entry.title }}', '{{ entry.interpret }}')">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     
         <!-- Spalte 2 -->
         <div class="col-12 col-md-6">
-            <div class="p-3 border bg-light">
-            <h5 class="title-text">USDB: Top Download Charts</h5>
-            <ul class="list-group list-group-numbered">
-                {% for entry in entries_download_charts %}
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">{{ entry.title }}</div>
-                            <a href="{{ entry.link }}" target="_blank">USDB-Link</a>
-                        </div>  
-                        <button type="button" class="btn btn-primary btn-download" onclick="addToQuery('{{ entry.link }}')">
-                            <i class="fa-solid fa-download"></i>
-                        </button>              
-                    </li>
-                {% endfor %}
-            </ul>
+            <div class="p-3 border bg-light rounded shadow-sm">
+                <h5 class="title-text">USDB: Top Download Charts</h5>
+                <ul class="list-group list-group-flush">
+                    {% for entry in entries_download_charts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="flex-grow-1">                                
+                                <div class="fw-bold text-wrap">{{ entry.title }}</div>
+                                <div class="text-wrap">{{ entry.interpret}}</div>
+                                {% if entry.STATUS == 4 %}
+                                    <span class="badge bg-success">Downloaded</span>
+                                {% elif entry.STATUS == -2 %}
+                                <span class="badge bg-warning">In Query List</span>
+                                {% endif %}    
+                                <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                                        
+                            </div> 
+                            <button type="button" class="btn btn-primary btn-right"                                 
+                                onclick="addToQuery('{{ entry.link }}', '{{ entry.title }}', '{{ entry.interpret }}')">
+                                <i class="fa-solid fa-download"></i>
+                            </button>                           
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-        </div>
+    </div>
 </div>    
 
 <script>
-    function addToQuery(link) {
+    function addToQuery(link, title, interpret) {
         const url = new URL(link);
-        const id = url.searchParams.get('id');
-        alert("Link: " + id);
+        const song_id = url.searchParams.get('id');        
+
+        fetch('/add_to_download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                SONG_ID: song_id,
+                SONG_INTERPRET: interpret,
+                SONG_TITEL: title,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Serverantwort:', data);
+                alert(data.message);
+            })
+            .catch(console.error);
     }
 </script>
 

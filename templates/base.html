@@ -6,8 +6,8 @@
     <title>USDB Scraper</title>
     <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>     
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Verweise auf deine zentrale CSS-Datei -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -20,7 +20,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'page_home' %}active{% endif %}" aria-current="page" href="/">Home</a>
                     </li>
@@ -29,22 +29,21 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'page_query_list' %}active{% endif %}" href="/query-list">Query List</a>
-                    </li>    
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'page_downloads' %}active{% endif %}" href="/downloads">Download List</a>
-                    </li> 
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="/ultrastar-tools">UltraStar Tools</a>
-                    </li> -->              
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'page_logs' %}active{% endif %}" href="/logs">Logs</a>
+                    </li>
                 </ul>
-                <!-- Rechte Seite der Navbar -->
-                <div class="ms-auto">
-                    <button class="btn btn-primary" id="query_button" type="button"><i class="fa-solid fa-clipboard-list"></i></button>
-                </div>
             </div>
         </div>
     </nav>
 
-     <!-- Hier können andere Templates ihren Inhalt „einhängen“ -->
-    {% block content %}{% endblock %}
+    <!-- Inhaltsbereich -->
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
 </body>
+</html>

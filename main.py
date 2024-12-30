@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request
-from classes.USDBScraper import USDBScraper
 from classes.USDBScraperDB import USDBScraperDB
 from classes.USDBUtility import USDBUtility
+from classes.USDBScraperBeatifulSoap import USDBScraperBeatifulSoap
 import os
 import json
 import asyncio
@@ -53,9 +53,9 @@ async def background_task():
 
                 flask_logger.debug("USDB Scraping start...")
 
-                # Scraping Song Information from USDB                                            
-                usdbScraperObject = USDBScraper("./chromedriver-win64/chromedriver.exe", usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", "")) 
-                song_infos = usdbScraperObject.srape_song(usdb_song_id)  
+                # Scraping Song Information from USDB -> OLD                                
+                usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
+                song_infos = usdbScraperObject.srape_song(usdb_song_id)
 
                 # Update Song in Database
                 databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), 2)
@@ -105,6 +105,7 @@ async def background_task():
 
                 # prepare Song for UltraStar
                 usdbUtilityObj.prepare_song_ultra_star(output_path)
+                flask_logger.debug("Song Scraping Completed...")
 
         flask_logger.debug("Background Task finished / wait 20 seconds...")
         await asyncio.sleep(20)  # wait 20 seconds
@@ -123,15 +124,48 @@ download_list = []
 # PAGES
 @app.route('/', methods=['GET'])
 def page_home():    
+    usdbDatabaseObj = USDBScraperDB("usdb_scrapper.db")
     flask_logger.debug("GET: Home Page...")
 
     feed_url_top_10 = "https://usdb.animux.de/rss/rss_new_top10.php"
     feed_data = feedparser.parse(feed_url_top_10)
-    entries_top_10 = feed_data.entries
+    entries_top_10 = feed_data.entries        
     
     feed_url_download_charts = "https://usdb.animux.de/rss/rss_downloads_top10.php"
     feed_data_download_charts = feedparser.parse(feed_url_download_charts)
     entries_download_charts = feed_data_download_charts.entries 
+
+    # Prepare Song Data - extract Interpret and Title
+    for song in entries_top_10:        
+        if 'title' in song:
+            parts = song['title'].split(' - ', 1)  # Trenne bei ' - ', max. 1 Mal
+            if len(parts) == 2:
+                interpret, title = parts
+                song['interpret'] = interpret.strip()  # Interpret hinzufügen
+                song['title'] = title.strip()         # Titel hinzufügen
+        if 'link' in song:
+            id = song['link'].split("id=")[-1]
+
+            # Check if Song is already Downloaded
+            result = usdbDatabaseObj.get_song_by_id(id)
+            if result:           
+                song['STATUS'] = result['STATUS']
+
+    # Prepare Song Data - extract Interpret and Title
+    for song in entries_download_charts:
+        if 'title' in song:
+            parts = song['title'].split(' - ', 1)  # Trenne bei ' - ', max. 1 Mal
+            if len(parts) == 2:
+                interpret, title = parts
+                song['interpret'] = interpret.strip()  # Interpret hinzufügen
+                song['title'] = title.strip()         # Titel hinzufügen
+        if 'link' in song:
+            id = song['link'].split("id=")[-1]
+
+            # Check if Song is already Downloaded
+            result = usdbDatabaseObj.get_song_by_id(id)
+            if result:           
+                song['STATUS'] = result['STATUS']
 
     return render_template('home.html', entries_top_10=entries_top_10, entries_download_charts=entries_download_charts)
 
@@ -161,6 +195,15 @@ def page_downloads():
 
     return render_template('downloads.html', downloaded_songs=downloaded_songs)
 
+@app.route('/logs', methods=['GET'])
+def page_logs():
+    try:
+        with open("flask_scraper.log", "r", encoding="utf-8") as file:
+            logs = file.readlines()
+    except FileNotFoundError:
+        return ["Logfile nicht gefunden."]
+    return render_template('logs.html', logs=logs)
+
 @app.route('/ultrastar-tools', methods=['GET'])
 def page_ultrastar_tools():
     flask_logger.debug("GET: UltraStar Tools Page...")
@@ -178,10 +221,20 @@ def search():
 
     # USDB Config
     usdb_config = config["USDBScraper"]    
-    
-    usdbScraperObject = USDBScraper("./chromedriver-win64/chromedriver.exe", usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", "")) 
-    SONGS = usdbScraperObject.search_song(query, filter_by)
 
+    # WORKAROUND
+    title = ""
+    interpret = ""
+    if filter_by == "TITLE":
+        title = query
+    if filter_by == "INTERPRET":
+        interpret = query
+        
+
+    # New Scraper
+    usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
+    SONGS = usdbScraperObject.search_song(title,interpret, 30)
+    
     return jsonify(SONGS)
 
 @app.route('/query_list_action', methods=['POST'])

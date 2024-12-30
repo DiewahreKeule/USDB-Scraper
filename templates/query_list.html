@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container">
     <div class="toast" id="toast-message" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
             <img src="..." class="rounded me-2" alt="...">
@@ -14,11 +14,64 @@
         </div>
     </div>
     
-    <h1 class="text-center">Query List</h1>              
-    <button class="btn btn-secondary btn-refresh" id="reloadButton">
-        <i class="fa-solid fa-arrows-rotate"></i>
-    </button>
-    <table class="table table-striped table-hover mt-6" id="songTable">
+    <h1 class="text-center">Query List
+        <button class="btn btn-secondary" id="reloadButton">
+            <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+    </h1>                  
+
+    <div class="container">
+        <ul class="list-group">     
+            {% for song in songs %}       
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-5">                                                
+                        <div class="badge-over">
+                            {% if song.STATUS == -2 %}
+                            <span class="badge bg-warning">Waiting</span>                        
+                            {% elif song.STATUS == 0 %}
+                            <span class="badge bg-info">Starting</span>
+                            {% elif song.STATUS == 1 %}
+                            <span class="badge bg-info">Scraping</span>
+                            {% elif song.STATUS == 2 %}
+                            <span class="badge bg-primary">Sraping Completed</span>
+                            {% elif song.STATUS == 3 %}
+                            <span class="badge bg-info">Download</span>
+                            {% elif song.STATUS == 4 %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif song.STATUS == -1 %}
+                            <span class="badge bg-danger">Failed</span>
+                            {% endif %}
+                        </div>
+                        <img src="{{song.SONG_COVER_URL}}" width="100" height="100">
+                    </div>
+                    <div class="col-7">
+                        <h5>{{song.SONG_TITLE}}</h5>
+                        <p>{{song.SONG_INTERPRET}}</p>                        
+                    </div>                                        
+                </div>    
+                <div class="row action-button">                    
+                    <div class="btn-group col-12">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="scraping">Start Scraping</a></li>
+                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="download">Start Download</a></li>
+                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="retry">Retry</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="delete">Delete</a></li>
+                        </ul>
+                    </div>                     
+                </div>                           
+            </li>
+            {% endfor %}       
+        </ul>  
+        <br>      
+    </div> 
+
+    <!-- old -->
+    <!-- <table class="table table-striped table-hover mt-6" id="songTable">
         <thead class="table-dark">
             <tr>
                 <th>USDB-ID</th>
@@ -45,7 +98,7 @@
         <tbody>
             {% for song in songs %}
             <tr>
-                <!-- Songs werden dynamisch geladen -->
+                <!-- Songs werden dynamisch geladen 
                 <td id="usdb_song_id">{{song.USDB_SONG_ID}}</td>
                 <td>
                     <img src="{{song.SONG_COVER_URL}}" width="100" height="100">
@@ -88,7 +141,7 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>                
+    </table>     -->           
 </div>
 <script>
     document.querySelectorAll('.btn-start-scarping').forEach(button => {        
