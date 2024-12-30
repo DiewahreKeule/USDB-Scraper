@@ -13,6 +13,8 @@
     },
     "USDBScraper": {
         "USERNAME": "your_username",
-        "PASSWORD": "your_password"
+        "PASSWORD": "your_password",
+        "PHPSESSID": "your_PHPSESSID",
+        "PK_ID": "your_PK_ID"
     }
 }

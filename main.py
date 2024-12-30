@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from classes.USDBScraper import USDBScraper
 from classes.USDBScraperDB import USDBScraperDB
 from classes.USDBUtility import USDBUtility
+from classes.USDBScraperBeatifulSoap import USDBScraperBeatifulSoap
 import os
 import json
 import asyncio
@@ -178,9 +179,19 @@ def search():
 
     # USDB Config
     usdb_config = config["USDBScraper"]    
-    
-    usdbScraperObject = USDBScraper("./chromedriver-win64/chromedriver.exe", usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", "")) 
-    SONGS = usdbScraperObject.search_song(query, filter_by)
+
+    # WORKAROUND
+    title = ""
+    interpret = ""
+    if filter_by == "TITLE":
+        title = query
+    if filter_by == "INTERPRET":
+        interpret = query
+        
+
+    # New Scraper
+    usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
+    SONGS = usdbScraperObject.search_song(title,interpret, 30)
 
     return jsonify(SONGS)
 
