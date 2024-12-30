@@ -2,3 +2,4 @@ Flask==3.1.0
 Requests==2.32.3
 yt_dlp==2024.12.23
 beautifulsoup4==4.11.1
+feedparser==6.0.11
