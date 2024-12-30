@@ -20,5 +20,5 @@ UltraStar Deluxe: https://github.com/UltraStar-Deluxe/USDX
 ## Installation (Docker)
 1. Clone this Repository `git clone https://github.com/DiewahreKeule/USDB-Scraper.git`
 2. `cd USDB-Scraper`
-3. `docker build -t flask-app .`
-4. `docker run -v your/local/folder:/app/output -p 5000:5000 flask-app`
+3. `docker build -t usdb-scraper .`
+4. `docker run -v your/local/folder:/app/output -p 5000:5000 usdb-scraper`
