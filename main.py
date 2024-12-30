@@ -318,7 +318,9 @@ if __name__ == '__main__':
          # Starte die Hintergrundaufgabe in einem separaten Thread
         background_thread = threading.Thread(target=start_background_task, daemon=True)
         background_thread.start()
+        flask_logger.debug("Background Task started...")
 
         app.run(host=ip, port=port, debug=debug)
     else:        
         flask_logger.error("Can't find config.json!")
+        print("Can't find config.json!")
