@@ -28,6 +28,12 @@
     float: right;
 }
 
+.btn-action {
+    float: right;  
+    /* right: 0; */
+    /* position: absolute;   */
+}
+
 .btn-refresh {
     float: right;
 }
@@ -38,4 +44,12 @@
 
 .btn-center {
     text-align: center;
+}
+
+.badge-over {
+    position: absolute;
+}
+
+.action-button {
+    margin-top: 10px;
 }
