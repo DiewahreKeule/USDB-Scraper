@@ -37,7 +37,8 @@
                                 <div class="text-wrap">{{ entry.interpret}}</div>
                                 <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                                        
                             </div> 
-                            <button type="button" class="btn btn-primary btn-right" onclick="addToQuery('{{ entry.link }}')">
+                            <button type="button" class="btn btn-primary btn-right"                                 
+                                onclick="addToQuery('{{ entry.link }}', '{{ entry.title }}', '{{ entry.interpret }}')">
                                 <i class="fa-solid fa-download"></i>
                             </button>                           
                         </li>
@@ -49,10 +50,27 @@
 </div>    
 
 <script>
-    function addToQuery(link) {
+    function addToQuery(link, title, interpret) {
         const url = new URL(link);
-        const id = url.searchParams.get('id');
-        alert("Link: " + id);
+        const song_id = url.searchParams.get('id');        
+
+        fetch('/add_to_download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                SONG_ID: song_id,
+                SONG_INTERPRET: interpret,
+                SONG_TITEL: title,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Serverantwort:', data);
+                alert(data.message);
+            })
+            .catch(console.error);
     }
 </script>
 
