@@ -128,11 +128,29 @@ def page_home():
 
     feed_url_top_10 = "https://usdb.animux.de/rss/rss_new_top10.php"
     feed_data = feedparser.parse(feed_url_top_10)
-    entries_top_10 = feed_data.entries
+    entries_top_10 = feed_data.entries        
     
     feed_url_download_charts = "https://usdb.animux.de/rss/rss_downloads_top10.php"
     feed_data_download_charts = feedparser.parse(feed_url_download_charts)
     entries_download_charts = feed_data_download_charts.entries 
+
+    # Prepare Song Data - extract Interpret and Title
+    for song in entries_top_10:
+        if 'title' in song:
+            parts = song['title'].split(' - ', 1)  # Trenne bei ' - ', max. 1 Mal
+            if len(parts) == 2:
+                interpret, title = parts
+                song['interpret'] = interpret.strip()  # Interpret hinzufügen
+                song['title'] = title.strip()         # Titel hinzufügen
+
+    # Prepare Song Data - extract Interpret and Title
+    for song in entries_download_charts:
+        if 'title' in song:
+            parts = song['title'].split(' - ', 1)  # Trenne bei ' - ', max. 1 Mal
+            if len(parts) == 2:
+                interpret, title = parts
+                song['interpret'] = interpret.strip()  # Interpret hinzufügen
+                song['title'] = title.strip()         # Titel hinzufügen
 
     return render_template('home.html', entries_top_10=entries_top_10, entries_download_charts=entries_download_charts)
 

@@ -13,9 +13,10 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                             <div class="flex-grow-1">
                                 <div class="fw-bold text-wrap">{{ entry.title }}</div>
-                                <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-sm mt-2 mt-md-0" onclick="addToQuery('{{ entry.link }}')">
+                                <div class="text-wrap">{{ entry.interpret}}</div>
+                                <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                
+                            </div>                            
+                            <button type="button" class="btn btn-primary btn-right" onclick="addToQuery('{{ entry.link }}')">
                                 <i class="fa-solid fa-download"></i>
                             </button>
                         </li>
@@ -31,13 +32,14 @@
                 <ul class="list-group list-group-flush">
                     {% for entry in entries_download_charts %}
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="flex-grow-1">
+                            <div class="flex-grow-1">                                
                                 <div class="fw-bold text-wrap">{{ entry.title }}</div>
-                                <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-sm mt-2 mt-md-0" onclick="addToQuery('{{ entry.link }}')">
+                                <div class="text-wrap">{{ entry.interpret}}</div>
+                                <!-- <a href="{{ entry.link }}" target="_blank" class="small text-decoration-none">USDB-Link</a> -->                                                        
+                            </div> 
+                            <button type="button" class="btn btn-primary btn-right" onclick="addToQuery('{{ entry.link }}')">
                                 <i class="fa-solid fa-download"></i>
-                            </button>
+                            </button>                           
                         </li>
                     {% endfor %}
                 </ul>
