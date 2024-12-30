@@ -180,6 +180,15 @@ def page_downloads():
 
     return render_template('downloads.html', downloaded_songs=downloaded_songs)
 
+@app.route('/logs', methods=['GET'])
+def page_logs():
+    try:
+        with open("flask_scraper.log", "r", encoding="utf-8") as file:
+            logs = file.readlines()
+    except FileNotFoundError:
+        return ["Logfile nicht gefunden."]
+    return render_template('logs.html', logs=logs)
+
 @app.route('/ultrastar-tools', methods=['GET'])
 def page_ultrastar_tools():
     flask_logger.debug("GET: UltraStar Tools Page...")

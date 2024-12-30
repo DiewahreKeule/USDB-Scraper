@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">    
+    <h1 class="text-center" id="text-search-result">Logfile</h1>
+    <div class="container">
+        <ul class="list-group" id="searchResultList">   
+        {% for line in logs %}   
+        <li class="list-group-item"> {{ line }} </li> 
+        {% endfor %}     
+        </ul>        
+    </div>       
+</div>    
+
+<script>
+</script>
+
+{% endblock %}
