@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, render_template, request
-from classes.USDBScraper import USDBScraper
 from classes.USDBScraperDB import USDBScraperDB
 from classes.USDBUtility import USDBUtility
 from classes.USDBScraperBeatifulSoap import USDBScraperBeatifulSoap
@@ -54,9 +53,9 @@ async def background_task():
 
                 flask_logger.debug("USDB Scraping start...")
 
-                # Scraping Song Information from USDB                                            
-                usdbScraperObject = USDBScraper("./chromedriver-win64/chromedriver.exe", usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", "")) 
-                song_infos = usdbScraperObject.srape_song(usdb_song_id)  
+                # Scraping Song Information from USDB -> OLD                                
+                usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
+                song_infos = usdbScraperObject.srape_song(usdb_song_id)
 
                 # Update Song in Database
                 databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), 2)
@@ -106,6 +105,7 @@ async def background_task():
 
                 # prepare Song for UltraStar
                 usdbUtilityObj.prepare_song_ultra_star(output_path)
+                flask_logger.debug("Song Scraping Completed...")
 
         flask_logger.debug("Background Task finished / wait 20 seconds...")
         await asyncio.sleep(20)  # wait 20 seconds
@@ -192,7 +192,7 @@ def search():
     # New Scraper
     usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
     SONGS = usdbScraperObject.search_song(title,interpret, 30)
-
+    
     return jsonify(SONGS)
 
 @app.route('/query_list_action', methods=['POST'])
