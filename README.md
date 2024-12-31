@@ -1,6 +1,7 @@
 # USDB Scraper
-Search and Download your favorite songs for UltraStar Deluxe
+![image](/static/android-chrome-192x192.png)
 
+Search and Download your favorite Songs from UlstraStar Database\
 UltraStar Deluxe: https://github.com/UltraStar-Deluxe/USDX
 
 ## Features
