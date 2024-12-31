@@ -24,3 +24,16 @@ UltraStar Deluxe: https://github.com/UltraStar-Deluxe/USDX
 2. `cd USDB-Scraper`
 3. `docker build -t usdb-scraper .`
 4. `docker run -v your/local/folder:/app/output -p 5000:5000 usdb-scraper`
+
+## Screenshots
+### Home
+![Home](/docs/home.png)
+
+### Search
+![Search](/docs/Search.png)
+
+### Query List
+![Query-List](/docs/Query_list.png)
+
+### Download List
+![Download-List](/docs/Download_list.png)
