@@ -27,13 +27,13 @@ UltraStar Deluxe: https://github.com/UltraStar-Deluxe/USDX
 
 ## Screenshots
 ### Home
-[Home](/docs/home.png)
+![Home](/docs/home.png)
 
 ### Search
-[Search](/docs/Search.png)
+![Search](/docs/Search.png)
 
 ### Query List
-[Query-List](/docs/Query_list.png)
+![Query-List](/docs/Query_list.png)
 
 ### Download List
-[Download-List](/docs/Download_list.png)
+![Download-List](/docs/Download_list.png)
