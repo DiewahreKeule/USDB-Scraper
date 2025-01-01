@@ -242,9 +242,8 @@ def function_query_list_action():
     usdb_song_id = request.json.get('USDB_SONG_ID')
     status = request.json.get('STATUS')
 
-    flask_logger.debug("Change Song Status: " + str(usdb_song_id) + " - " + str(status))
-
-    print(status)
+    # Log New Sttatus
+    flask_logger.debug("Change Song Status: " + str(usdb_song_id) + " - " + str(status))    
 
     # Create Database Object
     databaseObj = USDBScraperDB("usdb_scrapper.db")
