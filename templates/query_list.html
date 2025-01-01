@@ -68,80 +68,7 @@
             {% endfor %}       
         </ul>  
         <br>      
-    </div> 
-
-    <!-- old -->
-    <!-- <table class="table table-striped table-hover mt-6" id="songTable">
-        <thead class="table-dark">
-            <tr>
-                <th>USDB-ID</th>
-                <th>COVER</th>
-                <th>Titel</th>    
-                <th>Interpret</th>                                    
-                <th>Status</th>
-                <th>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Action
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item btn-start-scarping" data-id="0" data-action="scraping">Start Scraping</a></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="0" data-action="download">Start Download</a></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="0" data-action="retry">Retry</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="0" data-action="delete">Delete</a></li>
-                        </ul>
-                        </div> 
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for song in songs %}
-            <tr>
-                <!-- Songs werden dynamisch geladen 
-                <td id="usdb_song_id">{{song.USDB_SONG_ID}}</td>
-                <td>
-                    <img src="{{song.SONG_COVER_URL}}" width="100" height="100">
-                </td>                    
-                <td>{{song.SONG_TITLE}}</td>
-                <td>{{song.SONG_INTERPRET}}</td>
-                
-                <td>
-                    {% if song.STATUS == -2 %}
-                    <span class="badge bg-warning">Waiting</span>                        
-                    {% elif song.STATUS == 0 %}
-                    <span class="badge bg-info">Starting</span>
-                    {% elif song.STATUS == 1 %}
-                    <span class="badge bg-info">Scraping</span>
-                    {% elif song.STATUS == 2 %}
-                    <span class="badge bg-primary">Sraping Completed</span>
-                    {% elif song.STATUS == 3 %}
-                    <span class="badge bg-info">Download / Create Folder</span>
-                    {% elif song.STATUS == 4 %}
-                    <span class="badge bg-success">Completed</span>
-                    {% elif song.STATUS == -1 %}
-                    <span class="badge bg-danger">Failed</span>
-                    {% endif %}
-                </td>
-                
-                <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Action
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="scraping">Start Scraping</a></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="download">Start Download</a></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="retry">Retry</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item btn-start-scarping" data-id="{{song.USDB_SONG_ID}}" data-action="delete">Delete</a></li>
-                        </ul>
-                        </div>                        
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>     -->           
+    </div>          
 </div>
 <script>
     document.querySelectorAll('.btn-start-scarping').forEach(button => {        
@@ -167,7 +94,7 @@
                     break;
                 case "delete":
                     console.log("delete");
-                    status = -2;
+                    status = -3;
                     break;
             }
 

@@ -72,6 +72,15 @@ class USDBScraperDB:
         self.cursor.execute(query, (status, song_id))
         self.connection.commit()
 
+    def delete_song_by_id(self, song_id):
+        """
+        Löscht einen Song aus der Tabelle QUERY_LIST.
+        :param song_id: ID des Songs
+        """
+        query = "DELETE FROM QUERY_LIST WHERE USDB_SONG_ID = ?"
+        self.cursor.execute(query, (song_id,))
+        self.connection.commit()
+
     def fetch_all_songs(self):
         """
         Liest alle Songs aus der Tabelle QUERY_LIST aus.

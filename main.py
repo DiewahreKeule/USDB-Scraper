@@ -244,8 +244,17 @@ def function_query_list_action():
 
     flask_logger.debug("Change Song Status: " + str(usdb_song_id) + " - " + str(status))
 
+    print(status)
+
+    # Create Database Object
     databaseObj = USDBScraperDB("usdb_scrapper.db")
-    databaseObj.update_song_status(usdb_song_id, status)
+
+    if str(status) == '-3':
+        # Delete Song from Database
+        databaseObj.delete_song_by_id(usdb_song_id)
+    else:      
+        # Update Song Status  
+        databaseObj.update_song_status(usdb_song_id, status)
 
     return jsonify({"USDB_SONG_ID": f"{usdb_song_id}", "STATUS": f"{status}"})
 
