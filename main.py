@@ -55,10 +55,10 @@ async def background_task():
 
                 # Scraping Song Information from USDB -> OLD                                
                 usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
-                song_infos = usdbScraperObject.srape_song(usdb_song_id)
+                song_infos = usdbScraperObject.srape_song(usdb_song_id)                
 
                 # Update Song in Database
-                databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), 2)
+                databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), song_infos.get("USDB_SONG_LINK", ""), 2)
                 flask_logger.debug("USDB Scraping end...")
 
             # STATUS 2  -> Scraping Completed
