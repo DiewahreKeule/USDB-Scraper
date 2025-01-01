@@ -20,8 +20,13 @@ class USDBScraperDB:
             STATUS) 
             VALUES (?, ?, ?, ?, -2);
         """
-        self.cursor.execute(query, (USDB_SONG_ID, SONG_TITLE, SONG_INTERPRET, SONG_COVER_URL))
-        self.connection.commit()
+
+        try:
+            self.cursor.execute(query, (USDB_SONG_ID, SONG_TITLE, SONG_INTERPRET, SONG_COVER_URL))
+            self.connection.commit()
+            return True
+        except sqlite3.IntegrityError as e:
+            return False
 
 
     def insert_song(self, song_title, song_interpret, song_genre, song_ultra_star_lyrics, song_yt_video_link, song_mp3_filename, song_mp4_filename, status):
