@@ -194,5 +194,6 @@ class USDBScraperBeatifulSoap:
             # Return Object
             return {
                 "YOUTUBE_URL": youtube_url,
-                "SONG_TEXT": lyrics
+                "SONG_TEXT": lyrics,
+                "USDB_SONG_LINK": url
             }

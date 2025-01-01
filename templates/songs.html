@@ -154,27 +154,6 @@
                 alert(data.message);
             })
             .catch(console.error);
-    }
-
-    // Funktion zum Entfernen eines Songs aus der Liste
-    function removeFromDownloadList(songId) {
-        fetch('/remove_from_download', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ SONG_ID: songId }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Serverantwort:', data);
-                alert(data.message);
-
-                // Aktualisiere die Liste im Modal
-                // document.getElementById('query_button').click();
-            })
-            .catch(console.error);
     }    
-    
 </script>
 {% endblock %}

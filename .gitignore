@@ -5,5 +5,5 @@ config.json
 output/*
 songs/*
 *.side
-*.db
+_usdb_scrapper.db
 *.log

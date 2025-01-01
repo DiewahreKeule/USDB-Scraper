@@ -6,7 +6,8 @@
         <button class="btn btn-secondary btn-refresh">
             <i class="fa-solid fa-arrows-rotate"></i>
         </button>  
-    </h1>       
+    </h1>     
+    <h2 class="text-center">{{ downloaded_songs|length }} Songs</h2>     
 
     <div class="container">
         <ul class="list-group"> 
@@ -80,7 +81,7 @@
                     break;
                 case "delete":
                     console.log("delete");
-                    status = -2;
+                    status = -3;
                     break;
             }
 

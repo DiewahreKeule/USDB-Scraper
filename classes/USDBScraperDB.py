@@ -20,8 +20,13 @@ class USDBScraperDB:
             STATUS) 
             VALUES (?, ?, ?, ?, -2);
         """
-        self.cursor.execute(query, (USDB_SONG_ID, SONG_TITLE, SONG_INTERPRET, SONG_COVER_URL))
-        self.connection.commit()
+
+        try:
+            self.cursor.execute(query, (USDB_SONG_ID, SONG_TITLE, SONG_INTERPRET, SONG_COVER_URL))
+            self.connection.commit()
+            return True
+        except sqlite3.IntegrityError as e:
+            return False
 
 
     def insert_song(self, song_title, song_interpret, song_genre, song_ultra_star_lyrics, song_yt_video_link, song_mp3_filename, song_mp4_filename, status):
@@ -31,22 +36,23 @@ class USDBScraperDB:
         :param song_interpret: Interpret des Songs
         :param song_genre: Genre des Songs
         :param song_ultra_star_lyrics: Lyrics im UltraStar-Format (als BLOB)
-        :param song_yt_video_link: YouTube-Link des Videos
-        :param song_mp3_filename: Dateiname der MP3
-        :param song_mp4_filename: Dateiname der MP4
+        :param song_yt_video_link: YouTube-Link des Videos        
         :param status: Status des Eintrags (z. B. 0 = inaktiv, 1 = aktiv)
         """
         query = """
         INSERT INTO QUERY_LIST (
             SONG_TITLE, SONG_INTERPRET, SONG_GENRE, SONG_ULTRA_STAR_LYRICS,
-            SONG_YT_VIDEO_LINK, SONG_MP3_FILENAME, SONG_MP4_FILENAME, STATUS
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            SONG_YT_VIDEO_LINK, STATUS
+        ) VALUES (?, ?, ?, ?, ?, ?)
         """
+
+
+
         self.cursor.execute(query, (song_title, song_interpret, song_genre, song_ultra_star_lyrics,
-                                    song_yt_video_link, song_mp3_filename, song_mp4_filename, status))
+                                    song_yt_video_link, status))
         self.connection.commit()
 
-    def upate_song_by_id(self, song_id, song_yt_video_link, song_ultra_star_lyrics, status):
+    def upate_song_by_id(self, song_id, song_yt_video_link, song_ultra_star_lyrics, usdb_song_link, status):
         """
         Songinformationen updaten
         """
@@ -54,10 +60,11 @@ class USDBScraperDB:
         UPDATE QUERY_LIST
             SET SONG_YT_VIDEO_LINK = ?,
             SONG_ULTRA_STAR_LYRICS = ?,
+            USDB_SONG_LINK = ?,
             STATUS = ?
         WHERE USDB_SONG_ID = ?
         """
-        self.cursor.execute(query, (song_yt_video_link, song_ultra_star_lyrics, status, song_id))
+        self.cursor.execute(query, (song_yt_video_link, song_ultra_star_lyrics, usdb_song_link, status, song_id))
         self.connection.commit()
 
     def update_song_status(self, song_id, status):
@@ -70,6 +77,15 @@ class USDBScraperDB:
         WHERE USDB_SONG_ID = ?        
         """
         self.cursor.execute(query, (status, song_id))
+        self.connection.commit()
+
+    def delete_song_by_id(self, song_id):
+        """
+        Löscht einen Song aus der Tabelle QUERY_LIST.
+        :param song_id: ID des Songs
+        """
+        query = "DELETE FROM QUERY_LIST WHERE USDB_SONG_ID = ?"
+        self.cursor.execute(query, (song_id,))
         self.connection.commit()
 
     def fetch_all_songs(self):

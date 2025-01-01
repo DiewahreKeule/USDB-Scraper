@@ -55,10 +55,10 @@ async def background_task():
 
                 # Scraping Song Information from USDB -> OLD                                
                 usdbScraperObject = USDBScraperBeatifulSoap(usdb_config.get("USERNAME", ""), usdb_config.get("PASSWORD", ""), usdb_config.get("PHPSESSID", ""), usdb_config.get("PK_ID", ""))
-                song_infos = usdbScraperObject.srape_song(usdb_song_id)
+                song_infos = usdbScraperObject.srape_song(usdb_song_id)                
 
                 # Update Song in Database
-                databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), 2)
+                databaseObj.upate_song_by_id(usdb_song_id, song_infos.get("YOUTUBE_URL", ""), song_infos.get("SONG_TEXT", ""), song_infos.get("USDB_SONG_LINK", ""), 2)
                 flask_logger.debug("USDB Scraping end...")
 
             # STATUS 2  -> Scraping Completed
@@ -118,8 +118,6 @@ def start_background_task():
     asyncio.set_event_loop(loop)
     loop.run_until_complete(background_task())
 
-# Save the Song-IDs on the Server   
-download_list = []
 
 # PAGES
 @app.route('/', methods=['GET'])
@@ -242,10 +240,18 @@ def function_query_list_action():
     usdb_song_id = request.json.get('USDB_SONG_ID')
     status = request.json.get('STATUS')
 
-    flask_logger.debug("Change Song Status: " + str(usdb_song_id) + " - " + str(status))
+    # Log New Sttatus
+    flask_logger.debug("Change Song Status: " + str(usdb_song_id) + " - " + str(status))    
 
+    # Create Database Object
     databaseObj = USDBScraperDB("usdb_scrapper.db")
-    databaseObj.update_song_status(usdb_song_id, status)
+
+    if str(status) == '-3':
+        # Delete Song from Database
+        databaseObj.delete_song_by_id(usdb_song_id)
+    else:      
+        # Update Song Status  
+        databaseObj.update_song_status(usdb_song_id, status)
 
     return jsonify({"USDB_SONG_ID": f"{usdb_song_id}", "STATUS": f"{status}"})
 
@@ -263,46 +269,18 @@ def add_to_download():
 
     # Save Song to Database
     databaseObj = USDBScraperDB("usdb_scrapper.db")
-    databaseObj.insert_song_query(song_id, song_title, song_interpret, song_cover_url)
+    result = databaseObj.insert_song_query(song_id, song_title, song_interpret, song_cover_url)
 
     # Data Validation
     if not (song_id and song_interpret and song_title):
-        return jsonify({"status": "error", "message": "Ungültige Song-Daten"}), 400
+        return jsonify({"status": "error", "message": "Ungültige Song-Daten"}), 400    
 
-    # Check if Song is already in the List
-    for song in download_list:
-        if song['SONG_ID'] == song_id:
-            return jsonify({"status": "info", "message": f"Song mit ID {song_id} ist bereits in der Liste."})
+    # Check Database Result
+    if result:
+        return jsonify({"status": "success", "message": f"Add {song_title} to Query-List."})
+    else:
+        return jsonify({"status": "error", "message": f"Song {song_title} already in Query-List"})
 
-    # Add Song to List
-    download_list.append({
-        "SONG_ID": song_id,
-        "SONG_INTERPRET": song_interpret,
-        "SONG_TITEL": song_title
-    })
-    print(f"Download-Liste aktualisiert: {download_list}")
-    return jsonify({"status": "success", "message": f"Song {song_title} hinzugefügt.", "download_list": download_list})
-
-@app.route('/remove_from_download', methods=['POST'])
-def remove_from_download():
-    song_id = request.json.get('SONG_ID')
-
-    # Song ID Validation
-    if not song_id:
-        return jsonify({"status": "error", "message": "Keine Song-ID übermittelt"}), 400
-
-    # Suche und entferne den Song
-    # global download_list
-    download_list = [song for song in download_list if song['SONG_ID'] != int(song_id)]
-
-    print(f"Download-Liste nach Entfernung: {download_list}")
-    return jsonify({"status": "success", "message": f"Song mit ID {song_id} entfernt.", "download_list": download_list})
-
-
-@app.route('/get_query_list', methods=['GET'])
-def get_download_list():
-    """Gibt die aktuelle Download-Liste zurück."""
-    return jsonify(download_list)
 
 if __name__ == '__main__':
     flask_logger.debug("Start USDB-Scraper Webserver...")    
