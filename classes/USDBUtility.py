@@ -163,12 +163,22 @@ class USDBUtility:
             with open(txt_file_path, 'r') as file:
                 lines = file.readlines()
 
+            # Check if COVER Tag (#COVER:) exists
+            cover_tag_exists = False
+            for line in lines:
+                if line.startswith('#COVER:'):
+                    cover_tag_exists = True
+
             updated_lines = []
             for line in lines:
                 # mp3-Datei ergänzen
                 if line.startswith('#MP3:'):
                     # Aktualisiere die Zeile mit dem neuen mp3-Dateinamen
-                    updated_lines.append(f'#MP3:{mp3_file}\n')                            
+                    updated_lines.append(f'#MP3:{mp3_file}\n')      
+
+                    # Create COVER TAG when it not exists
+                    if cover_tag_exists == False:
+                        updated_lines.append(f'#COVER:{cover_file}\n')      
 
                 # mp4-Datei ergänzen
                 elif line.startswith('#VIDEO:'):
