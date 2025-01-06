@@ -73,8 +73,10 @@ async def background_task():
                 databaseObj.update_song_status(usdb_song_id, 3)
 
                 # 1. Create Folder
-                flask_logger.debug("Create Song Folder...")               
-                song_folder_name = song.get("SONG_INTERPRET") + "-" + song.get("SONG_TITLE")  
+                flask_logger.debug("Create Song Folder...")      
+                
+                # Issue: #25 - Foldername + Filenames with spaces         
+                song_folder_name = song.get("SONG_INTERPRET") + " - " + song.get("SONG_TITLE")  
                 output_path  = usdbUtilityObj.create_song_folder(song_folder_name, application_config.get("OUTPUT_DIRECTORY", "output"))
                 media_file_path = output_path + "/" + song_folder_name
                 
